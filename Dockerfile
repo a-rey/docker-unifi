@@ -1,9 +1,12 @@
 FROM ubuntu:bionic
 
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+
 RUN \
     # update system packages ...
        apt-get update \
     && apt-get install -y \
+          sudo \
           gnupg \
           ca-certificates \
           apt-transport-https \
@@ -31,8 +34,6 @@ RUN \
           /tmp/* \
           /var/tmp/* \
           /var/lib/apt/lists/*
-
-COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
 WORKDIR /usr/lib/unifi/
 

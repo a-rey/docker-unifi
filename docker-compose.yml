@@ -4,12 +4,13 @@ services:
     image: unifi:latest
     container_name: unifi-controller
     environment:
-      - USER="unifi" # default
-      - JAVA_OPTS="" # default
+      - "APP_UID=6969" 
+      - "APP_GID=6969"
+      - "JAVA_OPTS="
     volumes:
-      - /unifi/data:/usr/lib/unifi/data
-      - /unifi/logs:/usr/lib/unifi/logs
-      - /unifi/run:/usr/lib/unifi/run
+      - /docker/unifi/data:/usr/lib/unifi/data
+      - /docker/unifi/logs:/usr/lib/unifi/logs
+      - /docker/unifi/run:/usr/lib/unifi/run
     ports:
       - 3478:3478/udp   # Unifi communication port
       - 10001:10001/udp # required for AP discovery
