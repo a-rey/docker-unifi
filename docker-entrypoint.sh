@@ -1,4 +1,5 @@
 #!/bin/bash
+
 echo "[docker-entrypoint.sh] starting ..."
 # set default UID/GID if not specified
 if [[ -z $APP_UID || -z $APP_GID ]]; then
@@ -6,9 +7,6 @@ if [[ -z $APP_UID || -z $APP_GID ]]; then
   APP_UID=1234
   APP_GID=5678
 fi
-# make expected volume folders
-echo "[docker-entrypoint.sh] making volume mounts ..."
-mkdir -p /usr/lib/unifi/{data,logs,run}
 # create user if needed
 if [[ ! $(id -u app >/dev/null 2>&1) ]]; then
   echo "[docker-entrypoint.sh] creating app user ${APP_UID}:${APP_GID} ..."
@@ -16,8 +14,11 @@ if [[ ! $(id -u app >/dev/null 2>&1) ]]; then
   useradd --no-log-init -r -u $APP_UID -g $APP_GID app
 fi 
 echo "[docker-entrypoint.sh] app user: $(id $APP_UID)"
+# make expected volume folders
+echo "[docker-entrypoint.sh] making volume mounts ..."
+mkdir -p /usr/lib/unifi/{data,logs,run}
 # set permissions on application data
-echo "[docker-entrypoint.sh] changing app ownership to ${APP_UID}:${APP_GID} ..."
+echo "[docker-entrypoint.sh] setting app ownership to ${APP_UID}:${APP_GID} ..."
 chown -R ${APP_UID}:${APP_GID} /usr/lib/unifi/
 # format command with user arguments
 APP_CMD="java $JAVA_OPTS -jar /usr/lib/unifi/lib/ace.jar start"
