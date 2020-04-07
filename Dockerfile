@@ -5,7 +5,7 @@ COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 RUN \
     # update system packages ...
        apt-get update \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
           sudo \
           gnupg \
           ca-certificates \
@@ -22,7 +22,7 @@ RUN \
     # update package database ...
     && apt-get update \
     # install MongoDB 3.4 & Unifi ...
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
           unifi \
           mongodb-org \
     # make entry executable

@@ -1,7 +1,12 @@
 version: "2"
+
 services:
+  
   unifi-controller:
     image: unifi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: unifi-controller
     environment:
       - "APP_UID=6969" 
