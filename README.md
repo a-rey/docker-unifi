@@ -129,5 +129,3 @@ sudo systemctl start unifi &
 watch -n 0.5 sudo docker logs unifi-controller
 ```
 
-
-
