@@ -76,6 +76,12 @@ Start the service and browse to `https://<host-ip>:8443`:
 sudo systemctl start unifi
 ```
 
+**NOTE:** If you are having trouble getting devices to be adopted by the unifi controller, you may need to set the controller hostname/IP manually under controller settings and check the box to override the controller hostname/IP. The controller hostname can be the FQDN for your controller on your network or the IP you statically assign the controller from your DNS server:
+
+![](https://img.community.ui.com/12516be0-c60a-4f8e-b02c-70be91a0dfa6/answers/1e455b55-9a2b-4be1-ab28-b7a8d5b5337c/b8282b56-d454-4d6f-96ac-5fef69a48807)
+
+_see this [Unifi forum discussion post](https://community.ui.com/questions/UniFi-is-stuck-at-Adopting/596ee99e-5828-4fa2-930d-e6d3b68deba6) for more info_
+
 ## Development Notes:
 
 Unifi Network Controller installation steps taken from these sources:
