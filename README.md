@@ -70,7 +70,7 @@ sudo mkdir -vp /docker/unifi/{data,logs,run}
 sudo chown -R 1234:5678 /docker/unifi/
 ```
 
-Start the service and browse to `https://<host-ip>`:
+Start the service and browse to `https://<host-ip>:8443`:
 
 ```
 sudo systemctl start unifi
