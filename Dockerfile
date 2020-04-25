@@ -38,4 +38,3 @@ RUN \
 WORKDIR /usr/lib/unifi/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-

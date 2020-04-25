@@ -18,7 +18,7 @@ Building the docker image:
 sudo docker build --tag unifi:latest .
 ```
 
-Create an `/etc/systemd/system/unifi.service` file with the following content:
+Create a `/etc/systemd/system/unifi.service` file with the following content:
 
 - **NOTE:** replace `<path to your docker-compose.yml>` below with your system's path
 

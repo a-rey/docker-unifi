@@ -12,7 +12,7 @@ if [[ ! $(id -u app >/dev/null 2>&1) ]]; then
   echo "[docker-entrypoint.sh] creating app user ${APP_UID}:${APP_GID} ..."
   groupadd -g $APP_GID app
   useradd --no-log-init -r -u $APP_UID -g $APP_GID app
-fi 
+fi
 echo "[docker-entrypoint.sh] app user: $(id $APP_UID)"
 # make expected volume folders
 echo "[docker-entrypoint.sh] making volume mounts ..."
@@ -25,4 +25,3 @@ APP_CMD="java $JAVA_OPTS -jar /usr/lib/unifi/lib/ace.jar start"
 # start server as container user
 echo "[docker-entrypoint.sh] running app: $APP_CMD"
 exec sudo -u app /bin/bash -c "$APP_CMD"
-
