@@ -114,20 +114,17 @@ For image development, the following script is helpful:
 #!/bin/bash
 # stop service
 sudo systemctl stop unifi
-# delete old container logs
-sudo rm -rvf /docker/unifi/
 # stop and remove active containers
 sudo docker stop $(sudo docker ps -aq)
 sudo docker rm $(sudo docker ps -aq)
+# delete old container logs
+sudo docker volume rm $(sudo docker volume ls -q)
 # delete image
 sudo docker rmi unifi:latest
 # goto location of repo with Dockerfile and rebuild image
 # NOTE: assumes git repo in home directory of current user
 cd ~/docker_unifi/
 sudo docker build --tag unifi:latest .
-# create new container directories with APP_UID:APP_GID ownership
-sudo mkdir -vp /docker/unifi/{data,logs,run}
-sudo chown -R 6969:6969 /docker/unifi/
 # start service and look at container logs
 sudo systemctl start unifi &
 watch -n 0.5 sudo docker logs unifi-controller
