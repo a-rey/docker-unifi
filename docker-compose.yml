@@ -1,21 +1,20 @@
-version: "2"
+version: "3"
 
 services:
 
   unifi-controller:
     image: unifi:latest
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
     container_name: unifi-controller
     environment:
-      - "APP_UID=6969"
-      - "APP_GID=6969"
       - "JAVA_OPTS="
     volumes:
-      - /docker/unifi/data:/usr/lib/unifi/data
-      - /docker/unifi/logs:/usr/lib/unifi/logs
-      - /docker/unifi/run:/usr/lib/unifi/run
+      - unifi_data:/usr/lib/unifi/data:rw
+      - unifi_logs:/usr/lib/unifi/logs:rw
+      - unifi_run:/usr/lib/unifi/run:rw
     ports:
       - 3478:3478/udp   # Unifi communication port
       - 10001:10001/udp # required for AP discovery
@@ -25,4 +24,11 @@ services:
       - 8843:8843       # Unifi communication port
       - 8880:8880       # Unifi communication port
       - 6789:6789       # for throughput test
-    restart: unless-stopped
+
+volumes:
+
+  unifi_data:
+
+  unifi_logs:
+
+  unifi_run:

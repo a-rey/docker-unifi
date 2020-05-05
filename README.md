@@ -47,33 +47,33 @@ sudo systemctl enable unifi
 
 ## Settings:
 
-In `docker-compose.yml` there are 3 environmental variables you can customize:
+In `docker-compose.yml` you can customize the following environmental variables:
 
-- `APP_UID`: User ID for the container runtime of the Unifi Java application. Default is `1234`. 
-- `APP_GID`: Group ID for the container runtime of the Unifi Java application. Default is `5678`.
 - `JAVA_OPTS`: Extra command line flags to pass to the Java runtime when the Unifi application is started. For example, `"JAVA_OPTS=-Xmx1024M"` would set the runtime Java heap limit to 1024MB.
 
 In `docker-compose.yml` there are 3 volumes you can map out of the container to your docker host since the Unifi application is **not** running as `root`:
 
-| Container Directory   | Default Host Mountpoint in `docker-compose.yml` |
-| --------------------- | ----------------------------------------------- |
-| `/usr/lib/unifi/data` | `/docker/unifi/data`                            |
-| `/usr/lib/unifi/logs` | `/docker/unifi/logs`                            |
-| `/usr/lib/unifi/run`  | `/docker/unifi/run`                             |
+- By default, the user ID and group ID of the image user is `6969`. You can change this in the `Dockerfile` before building the image to suit your needs.
+
+| Container Directory   | Default Docker Volume in `docker-compose.yml` |
+| --------------------- | --------------------------------------------- |
+| `/usr/lib/unifi/data` | `unifi_data`                                  |
+| `/usr/lib/unifi/logs` | `unifi_logs`                                  |
+| `/usr/lib/unifi/run`  | `unifi_run`                                   |
 
 ## Run:
 
-Make required container volume directories and change ownership to the `APP_UID` and `APP_GID` values from your `docker-compose.yml` file (using `APP_UID` and `APP_GID` defaults below):
-
-```bash
-sudo mkdir -vp /docker/unifi/{data,logs,run}
-sudo chown -R 1234:5678 /docker/unifi/
-```
-
 Start the service and browse to `https://<host-ip>:8443`:
 
-```
+```bash
 sudo systemctl start unifi
+```
+
+Your container data host location can be found by running the following docker commands:
+
+```bash
+sudo docker volume ls
+sudo docker volume inspect <volume_name>
 ```
 
 **NOTE:** If you are having trouble getting devices to be adopted by the unifi controller, you may need to set the controller hostname/IP manually under controller settings and check the box to override the controller hostname/IP. The controller hostname can be the FQDN for your controller on your network or the IP you statically assign the controller from your DNS server:
@@ -96,14 +96,12 @@ Helpful Docker debugging commands:
 sudo docker stop $(sudo docker ps -aq)
 # delete all containers
 sudo docker rm $(sudo docker ps -aq)
-# delete unifi docker image
-sudo docker rmi unifi:latest
 # delete all docker images
 sudo docker rmi $(sudo docker images -aq)
-# start a bash shell in the unifi image
-sudo docker run -it --entrypoint /bin/sh unifi:latest -s
 # delete all unmapped docker volumes
 sudo docker volume rm $(sudo docker volume ls -q)
+# start a bash shell in the unifi image
+sudo docker run -it --entrypoint /bin/bash unifi:latest -s
 # view logs from unifi-controller container
 sudo docker logs unifi-controller
 # reload changes to /etc/systemd/system/unifi.service
