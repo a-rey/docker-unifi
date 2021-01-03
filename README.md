@@ -108,25 +108,32 @@ sudo docker logs unifi-controller
 sudo systemctl daemon-reload
 ```
 
-For image development, the following script is helpful:
+For image development & updating, the following script is helpful:
 
 ```bash
 #!/bin/bash
 # stop service
+echo '[!!!] stopping unifi service ...'
 sudo systemctl stop unifi
 # stop and remove active containers
+echo '[!!!] stopping unifi containers ...'
 sudo docker stop $(sudo docker ps -aq)
+echo '[!!!] removing unifi containers ...'
 sudo docker rm $(sudo docker ps -aq)
 # delete old container volumes
 # NOTE: this will delete any backups!
-sudo docker volume rm $(sudo docker volume ls -q)
+#echo '[!!!] deleting unifi volumes ...'
+#sudo docker volume rm $(sudo docker volume ls -q)
 # delete image
+echo '[!!!] deleting unifi image ...'
 sudo docker rmi unifi:latest
 # goto location of repo with Dockerfile and rebuild image
 # NOTE: assumes git repo in home directory of current user
+echo '[!!!] re-building unifi image ...'
 cd ~/docker_unifi/
 sudo docker build --tag unifi:latest .
 # start service and look at container logs
+echo '[!!!] starting unifi service ...'
 sudo systemctl start unifi &
 watch -n 0.5 sudo docker logs unifi-controller
 ```
