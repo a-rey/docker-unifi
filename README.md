@@ -117,7 +117,8 @@ sudo systemctl stop unifi
 # stop and remove active containers
 sudo docker stop $(sudo docker ps -aq)
 sudo docker rm $(sudo docker ps -aq)
-# delete old container logs
+# delete old container volumes
+# NOTE: this will delete any backups!
 sudo docker volume rm $(sudo docker volume ls -q)
 # delete image
 sudo docker rmi unifi:latest
