@@ -1,14 +1,21 @@
 # Ubuntu Docker Unifi Network Controller
 
-Docker image for the [Unifi Network Controller](https://unifi-network.ui.com/#unifi) software on Ubuntu 18.04 LTS.
+Docker image for the [Unifi Network Controller](https://unifi-network.ui.com/#unifi) software
 
 ![Unifi Logo](https://unifi-network.ui.com/logo192.png)
 
 ## Install:
 
-- [Ubuntu amd64 ISO download](https://ubuntu.com/download/server/thank-you?version=18.04.4&architecture=amd64)
+- [Ubuntu amd64 ISO download](https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso)
 - [Docker CE Install](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 - [Docker Compose Install](https://docs.docker.com/compose/install/)
+
+## Versions:
+
+- Ubuntu `22.04 LTS`
+- Unifi Network Controller `v7.4.162`
+- MongoDB `v3.6.23`
+- openjdk `v11.0.20`
 
 ## Build:
 
@@ -95,46 +102,53 @@ Helpful Docker debugging commands:
 # stop all running containers
 sudo docker stop $(sudo docker ps -aq)
 # delete all containers
-sudo docker rm $(sudo docker ps -aq)
+sudo docker rm $(sudo docker ps -a -q)
 # delete all docker images
-sudo docker rmi $(sudo docker images -aq)
+sudo docker image prune -a -f
 # delete all unmapped docker volumes
 sudo docker volume rm $(sudo docker volume ls -q)
+# clear docker build cache
+sudo docker buildx prune -f
 # start a bash shell in the unifi image
 sudo docker run -it --entrypoint /bin/bash unifi:latest -s
 # view logs from unifi-controller container
 sudo docker logs unifi-controller
 # reload changes to /etc/systemd/system/unifi.service
 sudo systemctl daemon-reload
+# start a bash shell in a running container
+sudo docker exec -it "id of running container" bash
 ```
 
 For image development & updating, the following script is helpful:
 
 ```bash
 #!/bin/bash
-# stop service
+set -e
+
 echo '[!!!] stopping unifi service ...'
 sudo systemctl stop unifi
-# stop and remove active containers
+
 echo '[!!!] stopping unifi containers ...'
 sudo docker stop $(sudo docker ps -aq)
+
 echo '[!!!] removing unifi containers ...'
 sudo docker rm $(sudo docker ps -aq)
-# delete old container volumes
+
 # NOTE: this will delete any backups!
 #echo '[!!!] deleting unifi volumes ...'
 #sudo docker volume rm $(sudo docker volume ls -q)
-# delete image
-echo '[!!!] deleting unifi image ...'
-sudo docker rmi unifi:latest
+
+echo '[!!!] deleting images ...'
+sudo docker image prune -a -f
+sudo docker buildx prune -f
+
 # goto location of repo with Dockerfile and rebuild image
 # NOTE: assumes git repo in home directory of current user
 echo '[!!!] re-building unifi image ...'
 cd ~/docker_unifi/
 sudo docker build --tag unifi:latest .
-# start service and look at container logs
+
 echo '[!!!] starting unifi service ...'
 sudo systemctl start unifi &
 watch -n 0.5 sudo docker logs unifi-controller
 ```
-
